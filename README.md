@@ -2,16 +2,29 @@
 
 适用于 Windows 上的 ZCode Agent。一个 PowerShell 脚本安装五个技能，配置知网 MCP，并准备它所需的 Python 环境和 Chromium 浏览器。首次使用知网时，请用自己的账号或学校入口在浏览器中完成认证。
 
-## 安装
+## 安装前准备
 
-1. 完全退出 ZCode。在 Windows 终端打开 **PowerShell 7.4 或更新版本**。在 PowerShell 里运行 `$PSVersionTable.PSVersion` 可以查看当前版本。
-2. 如果还没有 `uv`，运行下面的命令，然后重新打开终端。已经能运行 `uv --version` 的话可以跳过。
+1. **ZCode 桌面版**。下载安装后，用自己的账号连接可用模型。开一个 ZCode Agent 对话，确认发消息能收到回复。[Windows 安装](https://zcode.z.ai/cn/docs/install) · [连接模型](https://zcode.z.ai/cn/docs/configuration)
+2. **PowerShell 7.4 或更新版本**。在终端输入 `pwsh --version` 检查。电脑只有 Windows 自带的 PowerShell 5.1，或者版本低于 7.4 时，用下面的命令安装新版。装完后从开始菜单打开 **PowerShell 7**。[微软安装说明](https://learn.microsoft.com/zh-cn/powershell/scripting/install/installing-powershell-on-windows)
+
+   ```powershell
+   winget install --id Microsoft.PowerShell --exact --source winget
+   ```
+
+3. **uv**。它负责安装 Python 和知网工具所需的依赖。能运行 `uv --version` 就可以跳过这一步。安装后重新打开 PowerShell 7。如果电脑没有 `winget`，可按各自的官方说明手动安装 PowerShell 7 和 uv。[uv 安装说明](https://docs.astral.sh/uv/getting-started/installation/)
 
    ```powershell
    winget install --id astral-sh.uv -e
    ```
 
-3. 将下面代码整段复制到 PowerShell。可以先在 GitHub 查看 [安装脚本](install.ps1)。脚本从 GitHub 下载固定版本的上游文件，需要能访问 GitHub、Python 包源和 Playwright 的浏览器下载服务。
+4. **下载环境**。在 PowerShell 7 中运行 `curl.exe --version`，确认 Windows 的下载工具可用。如果找不到该命令，安装 curl 后重新打开终端。安装工具包时需要能访问 GitHub（包括 `raw.githubusercontent.com` 和 `codeload.github.com`）、PyPI 和 Playwright 的浏览器下载服务。使用知网检索时还需能打开知网，并按页面提示使用自己的账号或学校入口认证。[curl Windows 下载](https://curl.se/windows/)
+
+安装脚本会通过 uv 准备独立的 **Python 3.11 环境**，安装 **知网 MCP、Playwright 和 Chromium**，再将五个技能加入 ZCode。Python、Git、Node.js 和 Chrome 都无需提前单独安装。只有要使用文献综述技能自带的 PDF 提取脚本时，才需要额外安装下文的 PyMuPDF。
+
+## 安装
+
+1. 从系统托盘右键完全退出 ZCode，然后打开 PowerShell 7。
+2. 将下面代码整段复制到 PowerShell。可以先在 GitHub 查看 [安装脚本](install.ps1)。
 
    ```powershell
    $installer = Join-Path $env:TEMP 'zcode-thesis-toolkit-install.ps1'
@@ -21,7 +34,7 @@
 
    `Bypass` 只用于这次启动的 PowerShell 进程。装好后会打开知网登录窗口。按页面提示完成认证，再等终端返回。如果暂时只想用写作技能，删掉最后的 `-Login`。日后登录时，运行安装终端输出的 `init --profile default` 完整命令。
 
-4. 重新打开 ZCode，开一个 **ZCode Agent** 对话。进「设置 → 技能」确认下表中的五个英文名称，再进「设置 → MCP 服务器」确认 `cnki` 已启用。
+3. 重新打开 ZCode，开一个 **ZCode Agent** 对话。进「设置 → 技能」确认下表中的五个英文名称，再进「设置 → MCP 服务器」确认 `cnki` 已启用。
 
 ## 怎么用
 
@@ -45,7 +58,7 @@ uv pip install --python '这里填安装结束时显示的 Python 完整路径' 
 
 ## 常见问题
 
-- **脚本提示找不到 uv**：先完成第 2 步，重开 PowerShell 后再运行安装命令。
+- **脚本提示找不到 uv**：按「安装前准备」第 3 步安装，重开 PowerShell 7 后再运行安装命令。
 - **已存在同名知网 MCP**：脚本会暂停。可以继续使用已有知网配置，或者在 ZCode 的 MCP 设置里将原有服务改名，再运行安装脚本。
 - **技能列表没刷新**：完全退出 ZCode 再打开，确认新对话使用的是 ZCode Agent。遇到已有同名技能时，脚本会保留已有版本。
 - **知网登录已过期**：先退出 ZCode，再运行安装结束时给出的登录命令，认证后重开 ZCode。知网浏览器会话保存在本机的 `$env:USERPROFILE\.cnki-mcp`。
