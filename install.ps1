@@ -80,7 +80,7 @@ try {
     if (-not (Test-Path -LiteralPath $python)) {
         & $uvExe venv --python 3.11 $runtime
     }
-    & $uvExe pip install --python $python $cnki 'mcp==1.30.0' 'playwright==1.65.2' 'PyMuPDF<2'
+    & $uvExe pip install --python $python $cnki 'mcp==1.30.0' 'playwright==1.65.2'
     & $cnkiExe --help | Out-Null
     & $python -m playwright install chromium
 

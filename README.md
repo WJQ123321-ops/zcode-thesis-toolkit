@@ -37,7 +37,11 @@
 
 知网 MCP 用于检索和核对题录、摘要等信息。需要全文时，按自己的学校或机构权限去知网或期刊官网获取。
 
-文献综述技能附带检索和 PDF 提取脚本。若 ZCode 提示找不到 `python`，让它使用安装结束时显示的 Python 完整路径，并从 `$env:USERPROFILE\.zcode\skills\literature-review` 运行脚本。
+文献综述技能附带检索和 PDF 提取脚本。若 ZCode 提示找不到 `python`，让它使用安装结束时显示的 Python 完整路径，并从 `$env:USERPROFILE\.zcode\skills\literature-review` 运行脚本。首次需要运行 PDF 提取脚本时，给这个 Python 环境安装 PyMuPDF：
+
+```powershell
+uv pip install --python '这里填安装结束时显示的 Python 完整路径' 'PyMuPDF<2'
+```
 
 ## 常见问题
 
