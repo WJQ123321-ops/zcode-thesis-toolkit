@@ -78,9 +78,9 @@ try {
 
     Write-Host 'Installing the isolated Python environment and Chromium...'
     if (-not (Test-Path -LiteralPath $python)) {
-        & $uvExe venv --python 3.12 $runtime
+        & $uvExe venv --python 3.11 $runtime
     }
-    & $uvExe pip install --python $python $cnki 'mcp==1.30.0' 'playwright==1.65.2' 'PyMuPDF'
+    & $uvExe pip install --python $python $cnki 'mcp==1.30.0' 'playwright==1.65.2' 'PyMuPDF<2'
     & $cnkiExe --help | Out-Null
     & $python -m playwright install chromium
 
